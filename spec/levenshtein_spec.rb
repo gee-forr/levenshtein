@@ -1,39 +1,36 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper') 
+require 'pry'
 
 describe Levenshtein do
-  let(:s1_string01) { 'kitten' }
-  let(:s1_string02) { 'sitting' }
+  strings = [
+    # Short strings
+    {strs: ['kitten', 'sitting'],  distance: 3},
+    {strs: ['book', 'back'],       distance: 2},
+    {strs: ['table', 'tablet'],    distance: 1},
+    {strs: ['apple', 'microsoft'], distance: 9},
 
-  let(:s2_string01) { 'book' }
-  let(:s2_string02) { 'back' } 
-
-  let(:s3_string01) { 'table' }
-  let(:s3_string02) { 'tablet' } 
-
-  let(:s4_string01) { 'apple' }
-  let(:s4_string02) { 'microsoft' } 
-
-  let(:s5_string01) { 'levenshtein distance calculators are fun' }
-  let(:s5_string02) { 'yay' } 
-
-  let(:s6_string01) { 'Levenshtein distance is named after the Russian scientist Vladimir Levenshtein, who devised the algorithm in 1965' }
-  let(:s6_string02) { 'Russia?' } 
+    # Long strings
+    {strs: ['levenshtein distance calculators are fun', 'yay'], distance: 39},
+    {strs: ['Levenshtein distance is named after the Russian scientist Vladimir Levenshtein, who devised the algorithm in 1965', 'Russia?'], distance: 107},
+  ]
 
   context "when working with identical strings" do
-    let(:s1_string02) { 'kitten' }
     it "should say their distance is zero" do
-      Levenshtein.distance(s1_string01, s1_string02).should == 0
+      strings.each do |s|
+        str = s[:strs][0]
+        Levenshtein.distance(str, str).should == 0
+      end
     end
   end
 
   context "when working with different strings" do
     it "should know the distance between two strings" do
-      Levenshtein.distance(s1_string01, s1_string02).should == 3
-      Levenshtein.distance(s2_string01, s2_string02).should == 2
-      Levenshtein.distance(s3_string01, s3_string02).should == 1
-      Levenshtein.distance(s4_string01, s4_string02).should == 9
-      Levenshtein.distance(s5_string01, s5_string02).should == 39
-      Levenshtein.distance(s6_string01, s6_string02).should == 107
+      strings.each do |s|
+        s_str    = s[:strs][0]
+        t_str    = s[:strs][1]
+        distance = s[:distance]
+        Levenshtein.distance(s_str, t_str).should == distance
+      end
     end
   end
 end
